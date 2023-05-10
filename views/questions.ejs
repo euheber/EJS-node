@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/head') %>
 <%- include('partials/navbar') %>
 <body>
    <main class="container">
@@ -7,11 +7,11 @@
         <h3>Fazer pergunta</h3>
       </div>
       <div class="card-body">
-        <form>
+        <form method="POST" action="/questionsDBRoute">
           <label for="">Título</label>
-          <input type="text" placeholder="Título" class="form-control"> 
+          <input type="text" placeholder="Título" class="form-control" name="title"> 
           <label for="">Descrição</label>
-          <textarea placeholder="Faça sua pergunta" class="form-control"></textarea>
+          <textarea placeholder="Faça sua pergunta" class="form-control" name="description"></textarea>
           <button class="btn btn-success mt-3">Perguntar</button>
         </form>
       </div>
