@@ -30,7 +30,7 @@ app.get('/perguntar', (req, res) =>{
 app.post('/questionsDBRoute', (req, res) => { 
     let title = req.body.title
     let description = req.body.description
-
+    
     DBModel.create({
         title: title,
         descripiton: description
@@ -38,4 +38,14 @@ app.post('/questionsDBRoute', (req, res) => {
 })  
 
 
+app.get('/pergunta/:id', (req, res) => { 
+    let id = req.params.id
+
+    DBModel.findOne({
+        where: {id: id}
+    }).then( pergunta => { 
+      pergunta != undefined ? res.render("question", { pergunta:pergunta}) : res.redirect("/")
+        
+    })
+})
 app.listen(port)
