@@ -20,11 +20,13 @@
     <section>
       <h2 class="h3">Respostas</h2>
 
-      <ul>
-        <% resposta.forEach(element => { %>
-         <li><%= element.body %></li>
-        <% }) %>
-      </ul>
+      <% resposta.reverse().forEach(element => { %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <p><%= element.body %></p>
+          </div>
+        </div>
+       <% }) %>
     </section>
    </main>
    <%- include('partials/footer') %>
