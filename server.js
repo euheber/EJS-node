@@ -4,13 +4,12 @@ const port = 3000
 
 const connection = require('./database/database')
 const DBModel = require('./database/Questions')
-const Question = require('./database/Questions')
+const AnswerModel = require('./database/Answers')
 
 connection
 .authenticate()
 .then(() => {console.log('Deu certo');})
 .catch(err => console.log(`Opa, aconteceu um ${err}`))
-
 
 app.set('view engine', 'EJS')
 
@@ -23,8 +22,26 @@ app.get('/', (req, res) => {
         res.render("index", { pergunta:perguntas})
     })
 })
+
 app.get('/perguntar', (req, res) =>{
     res.render("questions")
+})
+
+app.get('/pergunta/:id', (req, res) => { 
+    let id = req.params.id
+
+    DBModel.findOne({where:{id: id}})
+    .then(pergunta => { 
+        if(pergunta != undefined){ 
+            AnswerModel.findAll({
+                where:{AnswerTo: pergunta.id}
+            }).then(respostas => { 
+                res.render("question", {pergunta:pergunta, resposta: respostas})
+            })
+        } else { 
+            res.redirect("/")
+        }
+    })
 })
 
 app.post('/questionsDBRoute', (req, res) => { 
@@ -37,15 +54,17 @@ app.post('/questionsDBRoute', (req, res) => {
     }).then(() => { res.redirect('/')})
 })  
 
+app.post("/answer", (req, res) => { 
+        let body = req.body.bodyAnswer
+        let answerID = req.body.pergunta
 
-app.get('/pergunta/:id', (req, res) => { 
-    let id = req.params.id
-
-    DBModel.findOne({
-        where: {id: id}
-    }).then( pergunta => { 
-      pergunta != undefined ? res.render("question", { pergunta:pergunta}) : res.redirect("/")
-        
-    })
+        AnswerModel.create({ 
+            body: body,
+            AnswerTo: answerID
+        }).then(() => { 
+            res.redirect(`/pergunta/${answerID}`)
+        })
 })
+
+
 app.listen(port)
